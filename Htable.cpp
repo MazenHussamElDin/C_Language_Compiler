@@ -6,11 +6,12 @@ using namespace std;
 
 class HashTable {
 private:
-    
-    static const int TABLE_SIZE = 50; // Adjust the table size based on the number of words
-    vector<string> table[TABLE_SIZE];
+    static const int TABLE_SIZE = 50; 
+
 public :
- int size=0;
+
+    vector<string> table[TABLE_SIZE];
+    int size=0;
 
     int hashFunction(const string& word) {
         int hash = 0;
@@ -41,5 +42,7 @@ public:
         }
         return false; // Word not found
     }
+
+    
 };
 
