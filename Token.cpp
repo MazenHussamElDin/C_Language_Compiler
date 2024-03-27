@@ -7,6 +7,8 @@ using namespace std;
 enum token_type {
     END_OF_FILE = 0, ERROR,
     RESERVED_KW, IDENTIFER, NUMBER,
+    //check this
+    DEC_NUMBER, HEX_NUMBER, O_NUMBER, BIN_NUMBER,
     ADD_OP, SUB_OP, ASTERISK_OP, DIV_OP,
     EQUALS_OP, SMALLER_THAN_OP,
     SMALLER_THAN_EQ_OP, GREATER_THAN_OP, GREATER_THAN_EQ_OP, NOT_EQ_OP, BITWISE_AND_OP,
@@ -28,7 +30,7 @@ public:
 
     enum token_type type;
     std::string name;
-    int value;
+    string value;
     int symbol_table_index;
     
 };
@@ -41,16 +43,33 @@ std::ostream& operator<<(std::ostream& out, const token& token) {
  str += "<";
  switch (token.type) {
 
-  case EQUALS_OP:
+  case ASSIGN_OP:
   str += "equals operator";
-    break;
+  break;
 
   case ADD_OP:
- str += "addition arithmetic operator";
- break;
+  str += "addition arithmetic operator";
+  break;
 
- case SEMICOLON:
-    str += "semicolon";
+  case DEC_NUMBER:
+  str+="Decimal Number, Value= " + token.value;
+  break;
+
+  case HEX_NUMBER:
+  str+="HEX Number, Value= " + token.value;
+  break;
+
+  case O_NUMBER:
+  str+="OCT Number, Value= " + token.value;
+  break;
+
+  case BIN_NUMBER:
+  str+="BIN Number, Value= " + token.value;
+  break;
+
+  case SEMICOLON:
+  str += "semicolon";
+  break;
 
  }
  str += ">";

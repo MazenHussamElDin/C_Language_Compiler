@@ -7,7 +7,12 @@
 #include "Token.cpp"
 #include <cassert>
 
+
+
+
 HashTable hashTable;
+
+using namespace std;
 
 // Function to read file contents into string buffer
 void read_file(std::string filepath, std::string& buffer) {
@@ -56,7 +61,40 @@ int index = 0;
 
 bool get_next_token_regex(std::string& buffer, token*& token) {
 
-	static std::regex all_operators(
+
+
+
+
+  
+
+  //EDIT WITHOUT DECIMAL
+  static std::regex all_operators(
+    "(\\+\\+|--)"               // Unary arithmetic operators (++, --)
+    "|(\\+|-|\\*|/|%)"
+    "|(>|<|==|>=|<=)"
+    "|(=|\\*=|%=|\\+=|-=|/=)"
+    "|(&&|\\|\\||!|<<|>>)"
+    "|(&|\\||~)"
+    "|(\\*|&|->)"
+    "|\\."
+    "|\\?"
+    "|\\(|\\)"
+    "|;"
+    "|:"
+    "|\\{|\\}"
+    "|\\[|\\]"
+     //Decimals
+    "|0[xX][0-9a-fA-F]+" //Hex
+    "|0[0-7]+"           //Octal
+    "|0[bB][01]+"        //Binary
+    "|(\\+|-)?(0|[1-9][0-9]*)"
+  );
+  
+
+
+	/*
+  //Bta3 YOMNA W FARIDA
+  static std::regex all_operators(
 		"\\+\\+|--"                // Unary arithmetic operators (++, --)
 		"|\\+|-|\\*|/|%"           // Binary arithmetic operators (+, -, *, /, %)
 		"|>|<|==|>=|<="            // Binary relational operators (>, <, ==, >=, <=)
@@ -71,28 +109,37 @@ bool get_next_token_regex(std::string& buffer, token*& token) {
     "|:"
     "|\\{|\\}"                  // Braces
     "\\[|\\]"                  // Brackets
-	);
+    "|(?:[-+]?[0-9]+(?:\\.[0-9]+)?" //Decimals
+    "|0[xX][0-9a-fA-F]+" //Hex
+    "|0[0-7]+" //Octal
+    "|0[bB][01]+)" //Binary
+	);*/
+
+
+
 
 	static std::sregex_iterator my_regex_iterator(
 		buffer.begin(),
 		buffer.end(),
 		all_operators
 	);
+
 	static std::sregex_iterator end;
+
 	while (my_regex_iterator != end) {
-		std::string match = my_regex_iterator->str();
+		string match = my_regex_iterator->str();
 		int lexeme_begin = my_regex_iterator->position();
 		++my_regex_iterator;
 
 		if (match.length() == 1) {
 			switch (match[0]) { // We can't switch-case on a string, so we get the first character in it
-			case '=': {cout << "=";  return token->type = ASSIGN_OP;};
 			case '<': return token->type = SMALLER_THAN_OP;
 			case '>': return token->type = GREATER_THAN_OP;
 			case '+': return token->type = ADD_OP;
 			case '-': return token->type = SUB_OP;
 			case '*': return token->type = ASTERISK_OP;
 			case '/': return token->type = DIV_OP;
+      case '=': { return token->type = ASSIGN_OP;};
 			case '%': return token->type = REM_OP;
       case '!': return token->type = LOGICAL_NOT_OP;
       case '&': return token->type = BITWISE_AND_OP;
@@ -113,8 +160,11 @@ bool get_next_token_regex(std::string& buffer, token*& token) {
 			case '\n': continue;
 			case '\t': continue;
 			case EOF: return token->type = END_OF_FILE;
-      default: {cout << "Error";  return token->type = ERROR;}
+      default: { return token->type = ERROR;}
 			}
+
+      
+
 		}
     if (std::regex_match(match, std::regex("\\{[^\\{\\}]+\\}"))) {
 			token->name = match;
@@ -162,12 +212,61 @@ bool get_next_token_regex(std::string& buffer, token*& token) {
 
       else if(match=="%=")
         return token->type= MOD_EQUAL_OP;
+    }
 
-  }
-   
+  
+  
+
+    if(regex_match(match, regex("0[xX][0-9a-fA-F]+"))){ //Hex
+      token->value = match.c_str();
+      return token->type = HEX_NUMBER;
+    } else if(regex_match(match, regex("0[0-7]+"))){ //Octal
+      token->value = match.c_str();
+      return token->type = O_NUMBER;
+    } else if(regex_match(match, regex("0[bB][01]+"))){ //Binary
+      token->value = match.c_str();
+      return token->type = BIN_NUMBER;
+    } else if(regex_match(match, regex("(\\+|-)?(0|[1-9][0-9]*)"))){ //Decimal
+      token->value = match.c_str();
+      return token->type = DEC_NUMBER;
+    } 
+
   }
   return false;
 }
+
+
+
+
+bool get_next_token(std::string& buffer, token*& token) {
+
+  token = new ::token();
+  return get_next_token_regex(buffer, token);
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 int main() {
 
@@ -175,8 +274,8 @@ int main() {
 
 
   // token* token;
-   string buf;
-   read_file("Trial.txt", buf);
+  string buf;
+  read_file("Trial.txt", buf);
    
   vector<string> keywords = {"auto", "break", "case", "char", "const", "continue", "default", "do", "double",
                                 "else", "enum", "extern", "float", "for", "goto", "if", "int", "long", "register",
@@ -187,16 +286,23 @@ int main() {
   for (const string& keyword : keywords) {
         hashTable.insert(keyword);
   }
-     std::vector<token*> tokens;
-    token* my_token = new token();
-    while(get_next_token_regex(buf, my_token)){
-      tokens.push_back(my_token);
+  
 
-    }
-    for (auto token : tokens) std::cout << *token << std::endl;
+  token* tok;
+  std::vector<token*> tokens;
+  while (get_next_token(buf, tok)) tokens.push_back(tok);
+
+  // Print out the tokens and symbol table
+  for (auto token : tokens){
+    cout << *token << std::endl;
+    
+  }
+
+  //std::cout << symbol_table << std::endl;
+
     
 
-    cout<< endl;
+    
 
     
 
