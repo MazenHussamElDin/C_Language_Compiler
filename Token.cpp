@@ -40,39 +40,18 @@ std::ostream& operator<<(std::ostream& out, const token& token) {
  std::string str;
  str += "<";
  switch (token.type) {
- case RESERVED_KW:
- str += "reserved keyword, name = " + token.name;
- break;
- case IDENTIFER:
- str += "identifier, name = " + token.name +
- ", symbol table index #" + std::to_string(token.symbol_table_index);
- break;
- case NUMBER:
- str += "number, value = " + std::to_string(token.value);
+
+  case EQUALS_OP:
+  str += "equals operator";
+    break;
+
   case ADD_OP:
  str += "addition arithmetic operator";
  break;
- case SUB_OP:
- str += "subtract arithmetic operator";
- break;
- case ASTERISK_OP:
- str += "multiply arithmetic operator";
- break;
+
  case SEMICOLON:
- str += "semicolon";
- break;
- case BLOCK_COMMENT:
- str += "block comment (to be ignored), content = " + token.name;
- break;
- case END_OF_FILE:
- str += "end-of-file";
- break;
- case ERROR:
- str += "erroneous token, content = " + token.name;
- break;
- default:
- str += "unexpected token";
- break;
+    str += "semicolon";
+
  }
  str += ">";
  out << str;

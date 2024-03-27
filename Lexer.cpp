@@ -5,6 +5,7 @@
 #include <regex>
 #include "Htable.cpp"
 #include "Token.cpp"
+#include <cassert>
 
 HashTable hashTable;
 
@@ -170,12 +171,12 @@ bool get_next_token_regex(std::string& buffer, token*& token) {
 
 int main() {
 
-  cout << "hello";
+  
 
 
-  token* token;
-  string buf;
-  read_file("Trial.txt", buf);
+  // token* token;
+   string buf;
+   read_file("Trial.txt", buf);
    
   vector<string> keywords = {"auto", "break", "case", "char", "const", "continue", "default", "do", "double",
                                 "else", "enum", "extern", "float", "for", "goto", "if", "int", "long", "register",
@@ -186,9 +187,21 @@ int main() {
   for (const string& keyword : keywords) {
         hashTable.insert(keyword);
   }
+     std::vector<token*> tokens;
+    token* my_token = new token();
+    while(get_next_token_regex(buf, my_token)){
+      tokens.push_back(my_token);
 
-bool x= get_next_token_regex(buf, token);
-cout << x;
+    }
+    for (auto token : tokens) std::cout << *token << std::endl;
+    
+
+    cout<< endl;
+
+    
+
+// bool x= get_next_token_regex(buf, token);
+// cout << x;
  // Tokenize it
 //  token* tok;
 //  std::vector<token*> tokens;
