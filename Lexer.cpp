@@ -6,6 +6,7 @@
 #include "Htable.cpp"
 #include "Token.cpp"
 #include <cassert>
+#include <string.h>
 
 
 
@@ -16,12 +17,11 @@ using namespace std;
 
 // Function to read file contents into string buffer
 void read_file(std::string filepath, std::string& buffer) {
- std::ifstream file(filepath);
- std::string line;
- while (getline(file, line)) {
- buffer.push_back('\n');
- buffer += line;
- }
+    std::ifstream file(filepath);
+    std::string line;
+    while (getline(file, line)) {
+        buffer += line;
+    }
 }
 
 bool is_reserved(string identifier) {
@@ -63,13 +63,11 @@ bool get_next_token_regex(std::string& buffer, token*& token) {
 
 
 
-
-
-  
-
   //EDIT WITHOUT DECIMAL
   static std::regex all_regexx(
     "(_+|[a-zA-Z])\\w*" // strings
+    "|\".*?\"" // any text in string 
+
 
     "|(\\+\\+|--)"               // Unary arithmetic operators (++, --)
     "|(\\+|-|\\*|/|%)"
@@ -89,33 +87,10 @@ bool get_next_token_regex(std::string& buffer, token*& token) {
     "|0[xX][0-9a-fA-F]+" //Hex
     "|0[0-7]+"           //Octal
     "|0[bB][01]+"        //Binary
-    "|(\\+|-)?(0|[1-9][0-9]*)"
+    //"|(\\+|-)?(0|[1-9][0-9]*)"
+    "|[-+]?[0-9]*(\\.[0-9]+)?([eE][-+]?[0-9]+)?"// floating point 
   );
   
-
-
-	/*
-  //Bta3 YOMNA W FARIDA
-  static std::regex all_regexx(
-		"\\+\\+|--"                // Unary arithmetic operators (++, --)
-		"|\\+|-|\\*|/|%"           // Binary arithmetic operators (+, -, *, /, %)
-		"|>|<|==|>=|<="            // Binary relational operators (>, <, ==, >=, <=)
-		"|=|\\*=|%=|\\+=|-=|/="    // Binary assignment operators (=, *=, %=,/=, +=, -=)
-		"|&&|\\|\\||!|<<|>>"       // Binary logical operators (&&, ||, !, <<, >>)
-		"|&|\\||~"                 // Binary bitwise operators (&, |, ~)
-		"|\\*|&|->"                // Pointer operations (*, &, ->)
-		"|\\."                     // Member operations (.)
-		"|\\?"                     // Ternconditional operator ()
-    "|\\(|\\)"                 // Parentheses
-    "|;"                       // Semicolon
-    "|:"
-    "|\\{|\\}"                  // Braces
-    "\\[|\\]"                  // Brackets
-    "|(?:[-+]?[0-9]+(?:\\.[0-9]+)?" //Decimals
-    "|0[xX][0-9a-fA-F]+" //Hex
-    "|0[0-7]+" //Octal
-    "|0[bB][01]+)" //Binary
-	);*/
 
 
 
@@ -125,10 +100,6 @@ bool get_next_token_regex(std::string& buffer, token*& token) {
 		buffer.end(),
 		all_regexx
 	);
-
-
-
-
 
 
 	static std::sregex_iterator end;
@@ -148,7 +119,7 @@ bool get_next_token_regex(std::string& buffer, token*& token) {
 			case '-': return token->type = SUB_OP;
 			case '*': return token->type = ASTERISK_OP;
 			case '/': return token->type = DIV_OP;
-      case '=': { return token->type = ASSIGN_OP;};
+      case '=': return token->type = ASSIGN_OP;
 			case '%': return token->type = REM_OP;
       case '!': return token->type = LOGICAL_NOT_OP;
       case '&': return token->type = BITWISE_AND_OP;
@@ -172,13 +143,30 @@ bool get_next_token_regex(std::string& buffer, token*& token) {
       //default: { return token->type = ERROR;}
 			}
 
+		}
+
+  if (std::regex_match(match, std::regex("[-+]?[0-9]+(\\.[0-9]+)?([eE][-+]?[0-9]+)?"))) {
+    token->value = match;
+    
+    for (int i = 0 ; i<match.length() ; i++){
+      if (match[i] == 'e' || match[i] == 'E')
+        return token->type = EXP_NUMBER;
       
+    }
 
-		}
+    for (int i = 0 ; i<match.length() ; i++){
+       if (match[i] == '.'){
+        return token->type = FLOATING_POINT_NUMBER;
+      }
+    }
+ 
+ return token->type = DEC_NUMBER;
 
 
+    
+}
 
-    if (std::regex_match(match, std::regex("[a-z A-Z_][a-z A-Z0-9]*"))) {
+    if (std::regex_match(match, std::regex("(_+|[a-zA-Z])\\w*"))) {
         token->name=match;
 			if(hashTable.search(match))
         return token -> type = RESERVED_KW; 
@@ -187,14 +175,16 @@ bool get_next_token_regex(std::string& buffer, token*& token) {
 
 		}
 
-    if (std::regex_match(match, std::regex("[a-z A-Z_][a-z A-Z0-9]*")) && match.length()==1) {
-        token->name=match;
-			if(hashTable.search(match))
-        return token -> type = RESERVED_KW; 
-      else 
-        return token -> type = IDENTIFER;
 
+
+
+
+if (std::regex_match(match, std::regex("\".*?\""))) {
+			token->name = match;
+      
+			return token->type = IDENTIFER;
 		}
+
 
 
     if (std::regex_match(match, std::regex("\\{[^\\{\\}]+\\}"))) {
@@ -256,11 +246,8 @@ bool get_next_token_regex(std::string& buffer, token*& token) {
       return token->type = O_NUMBER;
     } else if(regex_match(match, regex("0[bB][01]+"))){ //Binary
       token->value = match.c_str();
-      return token->type = BIN_NUMBER;
-    } else if(regex_match(match, regex("(\\+|-)?(0|[1-9][0-9]*)"))){ //Decimal
-      token->value = match.c_str();
-      return token->type = DEC_NUMBER;
-    } 
+      return token->type = BIN_NUMBER;}
+   
 
   }
   return false;
@@ -282,22 +269,6 @@ bool get_next_token(std::string& buffer, token*& token) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 int main() {
 
   
@@ -305,7 +276,7 @@ int main() {
 
   // token* token;
   string buf;
-  read_file("Trial.txt", buf);
+  read_file("C:/Users/osha/Desktop/compproj/C_Language_Compiler/Trial.txt", buf);
    
   vector<string> keywords = {"auto", "break", "case", "char", "const", "continue", "default", "do", "double",
                                 "else", "enum", "extern", "float", "for", "goto", "if", "int", "long", "register",
@@ -327,39 +298,6 @@ int main() {
     cout << *token << std::endl;
     
   }
-
-  //std::cout << symbol_table << std::endl;
-
-    
-
-    
-
-    
-
-// bool x= get_next_token_regex(buf, token);
-// cout << x;
- // Tokenize it
-//  token* tok;
-//  std::vector<token*> tokens;
-//  while (get_next_token_regex(buf, tok)) tokens.push_back(tok);
-//  // Print out the tokens and symbol table
-//  for (auto token : tokens) std::cout << *token << std::endl;
-//  std::cout << symbol_table << std::endl;
-
-  // //test buffer
-  // cout<<buf << endl;
-  // //test hashtable
-  // cout<< hashTable.size << endl;
-
-  // //test is reserved
-
-  // bool is = is_reserved("short");
-  // cout << " short is: "<< is << endl;
-  // is = is_reserved("hi");
-  // cout << " hi is: "<< is << endl;
-  // is = is_reserved("void");
-  // cout << " void is: "<< is << endl;
-
 
   return 0;
 }
