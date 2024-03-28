@@ -47,6 +47,14 @@ std::ostream& operator<<(std::ostream& out, const token& token) {
   str += "equals operator";
   break;
 
+  case RESERVED_KW:
+  str += "keyword, value=" + token.name;
+  break;
+
+  case IDENTIFER:
+  str += "identifier, Value= " + token.name;
+  break;
+
   case ADD_OP:
   str += "addition arithmetic operator";
   break;

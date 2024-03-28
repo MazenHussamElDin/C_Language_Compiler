@@ -1,1 +1,5 @@
-int i = 15 +9; 0xABCD 0765 0b101010 123 
+int i = 15 + 8; 0xABCD 0765 0b101010 123 
+print("Hello, World!")
+int main(){
+    print("badr gamed")
+}

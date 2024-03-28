@@ -68,8 +68,10 @@ bool get_next_token_regex(std::string& buffer, token*& token) {
   
 
   //EDIT WITHOUT DECIMAL
-  static std::regex all_operators(
-    "(\\+\\+|--)"               // Unary arithmetic operators (++, --)
+  static std::regex all_regexx(
+    "(_+|[a-zA-Z])\\w*" // strings
+
+    "|(\\+\\+|--)"               // Unary arithmetic operators (++, --)
     "|(\\+|-|\\*|/|%)"
     "|(>|<|==|>=|<=)"
     "|(=|\\*=|%=|\\+=|-=|/=)"
@@ -83,7 +85,7 @@ bool get_next_token_regex(std::string& buffer, token*& token) {
     "|:"
     "|\\{|\\}"
     "|\\[|\\]"
-     //Decimals
+    //Decimals
     "|0[xX][0-9a-fA-F]+" //Hex
     "|0[0-7]+"           //Octal
     "|0[bB][01]+"        //Binary
@@ -94,7 +96,7 @@ bool get_next_token_regex(std::string& buffer, token*& token) {
 
 	/*
   //Bta3 YOMNA W FARIDA
-  static std::regex all_operators(
+  static std::regex all_regexx(
 		"\\+\\+|--"                // Unary arithmetic operators (++, --)
 		"|\\+|-|\\*|/|%"           // Binary arithmetic operators (+, -, *, /, %)
 		"|>|<|==|>=|<="            // Binary relational operators (>, <, ==, >=, <=)
@@ -121,8 +123,13 @@ bool get_next_token_regex(std::string& buffer, token*& token) {
 	static std::sregex_iterator my_regex_iterator(
 		buffer.begin(),
 		buffer.end(),
-		all_operators
+		all_regexx
 	);
+
+
+
+
+
 
 	static std::sregex_iterator end;
 
@@ -131,7 +138,9 @@ bool get_next_token_regex(std::string& buffer, token*& token) {
 		int lexeme_begin = my_regex_iterator->position();
 		++my_regex_iterator;
 
+
 		if (match.length() == 1) {
+
 			switch (match[0]) { // We can't switch-case on a string, so we get the first character in it
 			case '<': return token->type = SMALLER_THAN_OP;
 			case '>': return token->type = GREATER_THAN_OP;
@@ -160,12 +169,34 @@ bool get_next_token_regex(std::string& buffer, token*& token) {
 			case '\n': continue;
 			case '\t': continue;
 			case EOF: return token->type = END_OF_FILE;
-      default: { return token->type = ERROR;}
+      //default: { return token->type = ERROR;}
 			}
 
       
 
 		}
+
+
+
+    if (std::regex_match(match, std::regex("[a-z A-Z_][a-z A-Z0-9]*"))) {
+        token->name=match;
+			if(hashTable.search(match))
+        return token -> type = RESERVED_KW; 
+      else 
+        return token -> type = IDENTIFER;
+
+		}
+
+    if (std::regex_match(match, std::regex("[a-z A-Z_][a-z A-Z0-9]*")) && match.length()==1) {
+        token->name=match;
+			if(hashTable.search(match))
+        return token -> type = RESERVED_KW; 
+      else 
+        return token -> type = IDENTIFER;
+
+		}
+
+
     if (std::regex_match(match, std::regex("\\{[^\\{\\}]+\\}"))) {
 			token->name = match;
 			return token->type = BLOCK_COMMENT;
@@ -244,7 +275,6 @@ bool get_next_token(std::string& buffer, token*& token) {
   return get_next_token_regex(buffer, token);
 
 }
-
 
 
 
