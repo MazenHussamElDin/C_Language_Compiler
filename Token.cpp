@@ -113,7 +113,7 @@ case EXP_NUMBER:
   break;
 
   case BLOCK_COMMENT:   
-  str += "block comment to be ignored, value= ";
+  str += "block comment to be ignored";
   break;
 
   case SINGLE_LINE_COMMENT:   
