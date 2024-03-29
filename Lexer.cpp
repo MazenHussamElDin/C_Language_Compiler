@@ -89,9 +89,6 @@ bool get_next_token_regex(std::string& buffer, token*& token) {
   );
   
 
-
-
-
 	static std::sregex_iterator my_regex_iterator(
 		buffer.begin(),
 		buffer.end(),
@@ -141,62 +138,7 @@ bool get_next_token_regex(std::string& buffer, token*& token) {
 			}
 
 		}
-
-  if (std::regex_match(match, std::regex("[-+]?[0-9]+(\\.[0-9]+)?([eE][-+]?[0-9]+)?"))) {
-    token->value = match;
-    
-    for (int i = 0 ; i<match.length() ; i++){
-      if (match[i] == 'e' || match[i] == 'E')
-        return token->type = EXP_NUMBER;
-      
-    }
-
-    for (int i = 0 ; i<match.length() ; i++){
-       if (match[i] == '.'){
-        return token->type = FLOATING_POINT_NUMBER;
-      }
-    }
- 
- return token->type = DEC_NUMBER;
-
-
-    
-}
-if (std::regex_match(match, std::regex("//.*"))) {
-    token->name = match;
-    return token->type = SINGLE_LINE_COMMENT;
-}
-
-
- if (std::regex_match(match, std::regex("/\\*.*?\\*/"))) {
-    token->name = match;
-    return token->type = BLOCK_COMMENT;
-}
-
-    if (std::regex_match(match, std::regex("(_+|[a-zA-Z])\\w*"))) {
-        token->name=match;
-			if(hashTable.search(match))
-        return token -> type = RESERVED_KW; 
-      else 
-        return token -> type = IDENTIFER;
-
-		}
-
-
-
-
-
-if (std::regex_match(match, std::regex("\".*?\""))) {
-			token->value= match;
-      
-			return token->type = STRING_LITERAL;
-		}
-
-
-
- 
-
-      if (match == "++") 
+     if (match == "++") 
 			  return token->type = INCREMENT_OP;
 
       else if (match == "--")
@@ -237,8 +179,55 @@ if (std::regex_match(match, std::regex("\".*?\""))) {
 
       else if(match=="%=")
         return token->type= MOD_EQUAL_OP;
+
+
+    if (std::regex_match(match, std::regex("(_+|[a-zA-Z])\\w*"))) {
+        token->name=match;
+			if(hashTable.search(match))
+        return token -> type = RESERVED_KW; 
+      else 
+        return token -> type = IDENTIFER;
+
+		}
  
-  
+ if (std::regex_match(match, std::regex("\".*?\""))) {
+			token->value= match;
+      
+			return token->type = STRING_LITERAL;
+		}
+    
+if (std::regex_match(match, std::regex("//.*"))) {
+    token->name = match;
+    return token->type = SINGLE_LINE_COMMENT;
+}
+
+
+ if (std::regex_match(match, std::regex("/\\*.*?\\*/"))) {
+    token->name = match;
+    return token->type = BLOCK_COMMENT;
+}
+
+  if (std::regex_match(match, std::regex("[-+]?[0-9]+(\\.[0-9]+)?([eE][-+]?[0-9]+)?"))) {
+    token->value = match;
+    
+    for (int i = 0 ; i<match.length() ; i++){
+      if (match[i] == 'e' || match[i] == 'E')
+        return token->type = EXP_NUMBER;
+      
+    }
+
+    for (int i = 0 ; i<match.length() ; i++){
+       if (match[i] == '.'){
+        return token->type = FLOATING_POINT_NUMBER;
+      }
+    }
+ 
+ return token->type = DEC_NUMBER;
+
+
+    
+}
+
     if(regex_match(match, regex("0[xX][0-9a-fA-F]+"))){ //Hex
       token->value = match.c_str();
       return token->type = HEX_NUMBER;
@@ -255,19 +244,12 @@ if (std::regex_match(match, std::regex("\".*?\""))) {
 }
 
 
-
-
 bool get_next_token(std::string& buffer, token*& token) {
 
   token = new ::token();
   return get_next_token_regex(buffer, token);
 
 }
-
-
-
-
-
 
 
 int main() {
