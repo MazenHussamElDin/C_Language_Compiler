@@ -1,7 +1,7 @@
 int main() {
    
     /* Block Comment */
-    
+
     int x = 5; 
     
     float y = 3.14; 
@@ -20,8 +20,7 @@ int main() {
     int logical_or = (x == 0) || (y == 10);
 
   
-    x += 2;
-    y /= 1.5;
+  
 
     printf("Result: %d\n", result);
     printf("Increment: %d\n", increment);
