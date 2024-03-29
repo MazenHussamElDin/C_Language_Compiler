@@ -201,7 +201,7 @@ if (std::regex_match(match, std::regex("\".*?\""))) {
 
 
  
-    if (match.length() == 2){
+
       if (match == "++") 
 			  return token->type = INCREMENT_OP;
 
@@ -243,11 +243,8 @@ if (std::regex_match(match, std::regex("\".*?\""))) {
 
       else if(match=="%=")
         return token->type= MOD_EQUAL_OP;
-    }
-
+ 
   
-  
-
     if(regex_match(match, regex("0[xX][0-9a-fA-F]+"))){ //Hex
       token->value = match.c_str();
       return token->type = HEX_NUMBER;
@@ -280,9 +277,6 @@ bool get_next_token(std::string& buffer, token*& token) {
 
 
 int main() {
-
-  
-
 
   // token* token;
   string buf;

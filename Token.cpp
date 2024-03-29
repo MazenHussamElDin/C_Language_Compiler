@@ -56,10 +56,6 @@ std::ostream& operator<<(std::ostream& out, const token& token) {
   str += "identifier, Value= " + token.name;
   break;
 
-  case ADD_OP:
-  str += "addition arithmetic operator";
-  break;
-
   case DEC_NUMBER:
   str+="Decimal Number, Value= " + token.value;
   break;
@@ -127,6 +123,124 @@ case EXP_NUMBER:
   case END_OF_FILE:
   str += "end of file";
   break;
+
+ case ADD_OP :
+  str += "addition operator";
+  break;
+
+  case SUB_OP : 
+  str += "subtraction operator";
+  break;
+
+  case ASTERISK_OP :
+  str += "multiplication operator";
+  break;  
+
+  case DIV_OP :
+  str += "division operator";
+  break;  
+
+  case REM_OP :
+  str += "remainder operator";  
+  break;  
+
+  case LOGICAL_NOT_OP :
+  str += "logical not operator";
+  break;
+
+  case BITWISE_AND_OP : 
+  str += "bitwise and operator";
+  break;
+
+  case BITWISE_OR_OP :
+  str += "bitwise or operator";
+  break;
+
+  case BITWISE_NOT_OP :
+  str += "bitwise not operator";
+  break;
+
+  case MEMBER_OP :
+  str += "member operator";
+  break;
+
+  case TERNARY_OP :
+  str += "ternary operator";
+  break;
+
+  case COLON_OP :
+  str += "colon operator";
+  break;
+
+  case COMMA_OP :
+  str += "comma operator";
+  break;
+
+case INCREMENT_OP :
+  str += "increment operator";
+  break;
+
+case DECREMENT_OP :  
+  str += "decrement operator";
+  break;
+
+case SHIFT_LEFT_OP :
+  str += "shift left operator";
+  break;
+
+case SHIFT_RIGHT_OP :
+  str += "shift right operator";
+  break;
+
+case ADD_EQUAL_OP :
+  str += "addition assignment operator";
+  break;
+
+case SUB_EQUAL_OP :
+  str += "subtraction assignment operator";
+  break;
+
+case MUL_EQUAL_OP :
+  str += "multiplication assignment operator";
+  break;
+
+case DIV_EQUAL_OP :
+  str += "division assignment operator";
+  break;
+
+case MOD_EQUAL_OP :
+  str += "modulus assignment operator";
+  break;
+
+case EQUALS_OP :
+  str += "equals operator";
+  break;
+
+case SMALLER_THAN_OP :
+  str += "smaller than operator";
+  break;
+
+case SMALLER_THAN_EQ_OP :
+  str += "smaller than or equal to operator";
+  break;
+
+case GREATER_THAN_OP :
+  str += "greater than operator";
+  break;  
+
+case GREATER_THAN_EQ_OP :
+  str += "greater than or equal to operator";
+  break;
+
+case LOGICAL_AND_OP :
+  str += "logical and operator";
+  break;
+
+case LOGICAL_OR_OP :
+  str += "logical or operator";
+  break;
+
+
 
  
 
