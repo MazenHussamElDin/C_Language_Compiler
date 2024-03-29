@@ -81,8 +81,7 @@ bool get_next_token_regex(std::string& buffer, token*& token) {
     "|:"
     "|\\{|\\}"
     "|\\[|\\]"
-                                                      //Decimals
-     "|0[xX][0-9a-fA-F]+"                            //Hex
+    "|0[xX][0-9a-fA-F]+"                            //Hex
     "|0[0-7]+"                                     //Octal
     "|0[bB][01]+"                                 //Binary
                                                  //"|(\\+|-)?(0|[1-9][0-9]*)"
@@ -188,9 +187,9 @@ if (std::regex_match(match, std::regex("//.*"))) {
 
 
 if (std::regex_match(match, std::regex("\".*?\""))) {
-			token->name = match;
+			token->value= match;
       
-			return token->type = IDENTIFER;
+			return token->type = STRING_LITERAL;
 		}
 
 
