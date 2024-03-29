@@ -19,7 +19,8 @@ enum token_type {
     BLOCK_COMMENT,COLON_OP,
     POINTER_DEC_OP,POINTER_REF_OP,POINTER_MEM_ACCESS_OP, MEMBER_OP, TERNARY_OP,INCREMENT_OP,DECREMENT_OP,
     COMMA_OP,SHIFT_LEFT_OP,SHIFT_RIGHT_OP,ADD_EQUAL_OP,SUB_EQUAL_OP,MUL_EQUAL_OP,DIV_EQUAL_OP,MOD_EQUAL_OP,
-    LEFT_CURLY_BRACKET,RIGHT_CURLY_BRACKET,LEFT_SQUARE_BRACKET,RIGHT_SQUARE_BRACKET, EXP_NUMBER, FLOATING_POINT_NUMBER
+    LEFT_CURLY_BRACKET,RIGHT_CURLY_BRACKET,LEFT_SQUARE_BRACKET,RIGHT_SQUARE_BRACKET, EXP_NUMBER, FLOATING_POINT_NUMBER,
+    SINGLE_LINE_COMMENT
     
 };
 
@@ -71,10 +72,6 @@ case EXP_NUMBER:
   str+="Floating Point Number, Value= " + token.value;
   break;
  
-
- 
-
-
   case HEX_NUMBER:
   str+="HEX Number, Value= " + token.value;
   break;
@@ -114,6 +111,24 @@ case EXP_NUMBER:
   case RIGHT_SQUARE_BRACKET:
   str += "right square bracket";
   break;
+
+  case BLOCK_COMMENT:   
+  str += "block comment to be ignored, value= ";
+  break;
+
+  case SINGLE_LINE_COMMENT:   
+  str += "single line comment to be ignored, value= ";
+  break;
+
+  case ERROR:
+  str += "error";
+  break;
+
+  case END_OF_FILE:
+  str += "end of file";
+  break;
+
+ 
 
  }
  str += ">";

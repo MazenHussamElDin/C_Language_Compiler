@@ -65,7 +65,10 @@ bool get_next_token_regex(std::string& buffer, token*& token) {
 
   //EDIT WITHOUT DECIMAL
   static std::regex all_regexx(
-    "(_+|[a-zA-Z])\\w*" // strings
+
+    "//.*?"  // Single line comments
+    "|/\\*.*?\\*/" // Block comments
+    "|(_+|[a-zA-Z])\\w*" // strings
     "|\".*?\"" // any text in string 
 
 
@@ -165,6 +168,16 @@ bool get_next_token_regex(std::string& buffer, token*& token) {
 
     
 }
+if (std::regex_match(match, std::regex("//.*"))) {
+    token->name = match;
+    return token->type = SINGLE_LINE_COMMENT;
+}
+
+
+ if (std::regex_match(match, std::regex("/\\*.*?\\*/"))) {
+    token->name = match;
+    return token->type = BLOCK_COMMENT;
+}
 
     if (std::regex_match(match, std::regex("(_+|[a-zA-Z])\\w*"))) {
         token->name=match;
@@ -187,10 +200,7 @@ if (std::regex_match(match, std::regex("\".*?\""))) {
 
 
 
-    if (std::regex_match(match, std::regex("\\{[^\\{\\}]+\\}"))) {
-			token->name = match;
-			return token->type = BLOCK_COMMENT;
-		}
+ 
     if (match.length() == 2){
       if (match == "++") 
 			  return token->type = INCREMENT_OP;
@@ -276,7 +286,7 @@ int main() {
 
   // token* token;
   string buf;
-  read_file("C:/Users/osha/Desktop/compproj/C_Language_Compiler/Trial.txt", buf);
+  read_file("Trial.txt", buf);
    
   vector<string> keywords = {"auto", "break", "case", "char", "const", "continue", "default", "do", "double",
                                 "else", "enum", "extern", "float", "for", "goto", "if", "int", "long", "register",

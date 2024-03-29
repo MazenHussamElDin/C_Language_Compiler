@@ -1,4 +1,31 @@
-int i=15 + 8 + 3.54 + 4E19 5.6e14;
-printf("yomna w badr gamdeen awi");
-kjrf vjr vrjv 
-++ = & * __
+int main() {
+   
+    int x = 5; 
+    
+    float y = 3.14; 
+
+  
+    char str[] = "Hello, world!";
+    int sum = x + 10;
+
+  
+    int result = x * y + sum / 2;
+    int increment = x++;
+    int decrement = y--;
+
+  
+    int logical_and = (x > 0) && (y < 10);
+    int logical_or = (x == 0) || (y == 10);
+
+  
+    x += 2;
+    y /= 1.5;
+
+    printf("Result: %d\n", result);
+    printf("Increment: %d\n", increment);
+    printf("Decrement: %d\n", decrement);
+    printf("Logical AND: %d\n", logical_and);
+    printf("Logical OR: %d\n", logical_or);
+
+    return 0;
+}
