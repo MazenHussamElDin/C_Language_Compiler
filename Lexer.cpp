@@ -8,9 +8,6 @@
 #include <cassert>
 #include <string.h>
 
-
-
-
 HashTable hashTable;
 
 using namespace std;
@@ -66,12 +63,10 @@ bool get_next_token_regex(std::string& buffer, token*& token) {
   //EDIT WITHOUT DECIMAL
   static std::regex all_regexx(
 
-    "//.*?"  // Single line comments
-    "|/\\*.*?\\*/" // Block comments
-    "|(_+|[a-zA-Z])\\w*" // strings
-    "|\".*?\"" // any text in string 
-
-
+    "//.*?"                          // Single line comments
+    "|/\\*.*?\\*/"                  // Block comments
+    "|(_+|[a-zA-Z])\\w*"           // strings
+    "|\".*?\""                    // any text in string 
     "|(\\+\\+|--)"               // Unary arithmetic operators (++, --)
     "|(\\+|-|\\*|/|%)"
     "|(>|<|==|>=|<=)"
@@ -86,11 +81,11 @@ bool get_next_token_regex(std::string& buffer, token*& token) {
     "|:"
     "|\\{|\\}"
     "|\\[|\\]"
-    //Decimals
-    "|0[xX][0-9a-fA-F]+" //Hex
-    "|0[0-7]+"           //Octal
-    "|0[bB][01]+"        //Binary
-    //"|(\\+|-)?(0|[1-9][0-9]*)"
+                                                      //Decimals
+     "|0[xX][0-9a-fA-F]+"                            //Hex
+    "|0[0-7]+"                                     //Octal
+    "|0[bB][01]+"                                 //Binary
+                                                 //"|(\\+|-)?(0|[1-9][0-9]*)"
     "|[-+]?[0-9]*(\\.[0-9]+)?([eE][-+]?[0-9]+)?"// floating point 
   );
   

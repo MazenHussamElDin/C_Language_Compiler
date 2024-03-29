@@ -2,7 +2,7 @@ int main() {
    
     /* Block Comment */
     
-    // single line comment
+   
     int x = 5; 
     
     float y = 3.14; 
