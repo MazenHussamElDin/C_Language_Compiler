@@ -63,14 +63,14 @@ bool get_next_token_regex(std::string& buffer, token*& token) {
   //EDIT WITHOUT DECIMAL
   static std::regex all_regexx(
 
-    "//.*?"                          // Single line comments
+    "//(.* \r\n)?"                          // Single line comments
     "|/\\*.*?\\*/"                  // Block comments
     "|(_+|[a-zA-Z])\\w*"           // strings
     "|\".*?\""                    // any text in string 
-    "|(\\+\\+|--)"               // Unary arithmetic operators (++, --)
+    "|(\\+\\+|--)"
+    "|(>|<|==|>=|<=)" 
+    "|(=|\\*=|%=|\\+=|-=|/=)"  
     "|(\\+|-|\\*|/|%)"
-    "|(>|<|==|>=|<=)"
-    "|(=|\\*=|%=|\\+=|-=|/=)"
     "|(&&|\\|\\||!|<<|>>)"
     "|(&|\\||~)"
     "|(\\*|&|->)"
@@ -103,42 +103,7 @@ bool get_next_token_regex(std::string& buffer, token*& token) {
 		int lexeme_begin = my_regex_iterator->position();
 		++my_regex_iterator;
 
-
-		if (match.length() == 1) {
-
-			switch (match[0]) { // We can't switch-case on a string, so we get the first character in it
-			case '<': return token->type = SMALLER_THAN_OP;
-			case '>': return token->type = GREATER_THAN_OP;
-			case '+': return token->type = ADD_OP;
-			case '-': return token->type = SUB_OP;
-			case '*': return token->type = ASTERISK_OP;
-			case '/': return token->type = DIV_OP;
-      case '=': return token->type = ASSIGN_OP;
-			case '%': return token->type = REM_OP;
-      case '!': return token->type = LOGICAL_NOT_OP;
-      case '&': return token->type = BITWISE_AND_OP;
-      case '|': return token->type = BITWISE_OR_OP;
-      case '~': return token->type = BITWISE_NOT_OP;
-      case '.': return token->type = MEMBER_OP;
-      case '?': return token->type = TERNARY_OP;
-      case '(': return token->type = LEFT_BRACKET;
-      case ')': return token->type = RIGHT_BRACKET;
-			case ';': return token->type = SEMICOLON;
-      case ':': return token->type = COLON_OP;  
-      case ',': return token->type = COMMA_OP;
-      case '[': return token->type = LEFT_SQUARE_BRACKET;
-      case ']': return token->type = RIGHT_SQUARE_BRACKET;
-      case '{': return token->type = LEFT_CURLY_BRACKET;
-      case '}': return token->type = RIGHT_CURLY_BRACKET;
-			case ' ': continue;
-			case '\n': continue;
-			case '\t': continue;
-			case EOF: return token->type = END_OF_FILE;
-      //default: { return token->type = ERROR;}
-			}
-
-		}
-     if (match == "++") 
+ if (match == "++") 
 			  return token->type = INCREMENT_OP;
 
       else if (match == "--")
@@ -180,6 +145,41 @@ bool get_next_token_regex(std::string& buffer, token*& token) {
       else if(match=="%=")
         return token->type= MOD_EQUAL_OP;
 
+		if (match.length() == 1) {
+
+			switch (match[0]) { // We can't switch-case on a string, so we get the first character in it
+			case '<': return token->type = SMALLER_THAN_OP;
+			case '>': return token->type = GREATER_THAN_OP;
+			case '+': return token->type = ADD_OP;
+			case '-': return token->type = SUB_OP;
+			case '*': return token->type = ASTERISK_OP;
+			case '/': return token->type = DIV_OP;
+      case '=': return token->type = ASSIGN_OP;
+			case '%': return token->type = REM_OP;
+      case '!': return token->type = LOGICAL_NOT_OP;
+      case '&': return token->type = BITWISE_AND_OP;
+      case '|': return token->type = BITWISE_OR_OP;
+      case '~': return token->type = BITWISE_NOT_OP;
+      case '.': return token->type = MEMBER_OP;
+      case '?': return token->type = TERNARY_OP;
+      case '(': return token->type = LEFT_BRACKET;
+      case ')': return token->type = RIGHT_BRACKET;
+			case ';': return token->type = SEMICOLON;
+      case ':': return token->type = COLON_OP;  
+      case ',': return token->type = COMMA_OP;
+      case '[': return token->type = LEFT_SQUARE_BRACKET;
+      case ']': return token->type = RIGHT_SQUARE_BRACKET;
+      case '{': return token->type = LEFT_CURLY_BRACKET;
+      case '}': return token->type = RIGHT_CURLY_BRACKET;
+			case ' ': continue;
+			case '\n': continue;
+			case '\t': continue;
+			case EOF: return token->type = END_OF_FILE;
+      //default: { return token->type = ERROR;}
+			}
+
+		}
+    
 
     if (std::regex_match(match, std::regex("(_+|[a-zA-Z])\\w*"))) {
         token->name=match;
@@ -196,15 +196,17 @@ bool get_next_token_regex(std::string& buffer, token*& token) {
 			return token->type = STRING_LITERAL;
 		}
     
-if (std::regex_match(match, std::regex("//.*"))) {
+if (std::regex_match(match, std::regex("//(.* \r\n)? "))) {
     token->name = match;
     return token->type = SINGLE_LINE_COMMENT;
+    
 }
 
 
  if (std::regex_match(match, std::regex("/\\*.*?\\*/"))) {
     token->name = match;
     return token->type = BLOCK_COMMENT;
+    
 }
 
   if (std::regex_match(match, std::regex("[-+]?[0-9]+(\\.[0-9]+)?([eE][-+]?[0-9]+)?"))) {

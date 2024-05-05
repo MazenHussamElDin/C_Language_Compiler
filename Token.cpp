@@ -45,7 +45,7 @@ std::ostream& operator<<(std::ostream& out, const token& token) {
  switch (token.type) {
 
   case ASSIGN_OP:
-  str += "equals operator";
+  str += "Assignment operator";
   break;
 
   case RESERVED_KW:

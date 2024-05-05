@@ -2,7 +2,8 @@ int main() {
    
     /* Block Comment */
     
-   
+    // single line Comment
+
     int x = 5; 
     
     float y = 3.14; 
@@ -15,6 +16,7 @@ int main() {
     int result = x * y + sum / 2;
     int increment = x++ ;
     int decrement = y--;
+    int variable += variable;
 
   
     int logical_and = (x > 0) && (y < 10);
