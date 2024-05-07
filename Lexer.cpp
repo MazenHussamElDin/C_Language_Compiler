@@ -196,7 +196,7 @@ bool get_next_token_regex(std::string& buffer, token*& token) {
 			return token->type = STRING_LITERAL;
 		}
     
-if (std::regex_match(match, std::regex("//(.* \r\n)? "))) {
+if (std::regex_match(match, std::regex("//(.*\r\n)?"))) {
     token->name = match;
     return token->type = SINGLE_LINE_COMMENT;
     
