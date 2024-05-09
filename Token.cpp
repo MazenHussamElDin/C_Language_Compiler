@@ -20,7 +20,7 @@ enum token_type {
     POINTER_DEC_OP,POINTER_REF_OP,POINTER_MEM_ACCESS_OP, MEMBER_OP, TERNARY_OP,INCREMENT_OP,DECREMENT_OP,
     COMMA_OP,SHIFT_LEFT_OP,SHIFT_RIGHT_OP,ADD_EQUAL_OP,SUB_EQUAL_OP,MUL_EQUAL_OP,DIV_EQUAL_OP,MOD_EQUAL_OP,
     LEFT_CURLY_BRACKET,RIGHT_CURLY_BRACKET,LEFT_SQUARE_BRACKET,RIGHT_SQUARE_BRACKET, EXP_NUMBER, FLOATING_POINT_NUMBER,
-    SINGLE_LINE_COMMENT,STRING_LITERAL
+    SINGLE_LINE_COMMENT,STRING_LITERAL, UNKNOWN
     
 };
 
@@ -54,6 +54,10 @@ std::ostream& operator<<(std::ostream& out, const token& token) {
 
   case IDENTIFER:
   str += "identifier, Value= " + token.name;
+  break;
+
+  case UNKNOWN:
+  str += "unknown, Value= " + token.name;
   break;
 
   case DEC_NUMBER:

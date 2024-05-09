@@ -85,7 +85,8 @@ bool get_next_token_regex(std::string& buffer, token*& token) {
     "|0[0-7]+"                                     //Octal
     "|0[bB][01]+"                                 //Binary
                                                  //"|(\\+|-)?(0|[1-9][0-9]*)"
-    "|[-+]?[0-9]*(\\.[0-9]+)?([eE][-+]?[0-9]+)?"// floating point 
+    "|[-+]?[0-9]*(\\.[0-9]+)?([eE][-+]?[0-9]+)?"
+    "|."// floating point 
   );
   
 
@@ -186,7 +187,8 @@ bool get_next_token_regex(std::string& buffer, token*& token) {
 			if(hashTable.search(match))
         return token -> type = RESERVED_KW; 
       else 
-        return token -> type = IDENTIFER;
+        {token -> symbol_table_index = add_to_symbol_table(match, lexeme_begin);
+        return token -> type = IDENTIFER;}
 
 		}
  
@@ -239,9 +241,18 @@ if (std::regex_match(match, std::regex("//(.*\r\n)?"))) {
     } else if(regex_match(match, regex("0[bB][01]+"))){ //Binary
       token->value = match.c_str();
       return token->type = BIN_NUMBER;}
-   
+
+
+
+   if (std::regex_match(match, std::regex("."))) {
+    token->name = match;
+    return token->type = UNKNOWN;
 
   }
+
+   
+    
+}
   return false;
 }
 
@@ -258,7 +269,7 @@ int main() {
 
   // token* token;
   string buf;
-  read_file("Trial.txt", buf);
+  read_file("C:/Users/osha/Desktop/comp/C_Language_Compiler/Trial.txt", buf);
    
   vector<string> keywords = {"auto", "break", "case", "char", "const", "continue", "default", "do", "double",
                                 "else", "enum", "extern", "float", "for", "goto", "if", "int", "long", "register",
@@ -279,6 +290,14 @@ int main() {
   for (auto token : tokens){
     cout << *token << std::endl;
     
+  }
+
+  for (auto token : symbol_table){
+    cout << token.first << " occurs at: ";
+    for (auto tok : token.second){
+      cout << tok << " ";
+    }
+    cout << endl;
   }
 
   return 0;

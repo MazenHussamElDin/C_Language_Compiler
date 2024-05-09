@@ -1,0 +1,1 @@
+enum colors { RED, GREEN, BLUE, BLACK = 42, WHITE }
